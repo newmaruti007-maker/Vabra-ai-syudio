@@ -1,5 +1,5 @@
-<!DOCTYPE html>
-<html lang="gu">
+<DOCTYPE html>
+html lang="gu">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -564,4 +564,152 @@ Cinematic ${mode} shot showing ${text}${file ? `, using reference ${file}` : ""}
     pick(M);
   </script>
 </body>
+</html><!DOCTYPE html>
+<html lang="gu">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>VABRA AI STUDIO</title>
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: #0f172a;
+      color: #e2e8f0;
+      padding: 16px;
+    }
+    .wrap { max-width: 860px; margin: 0 auto; }
+    .top-bar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+    .badge { background: #1e293b; color: #38bdf8; padding: 6px 12px; border-radius: 999px; font-size: 14px; border: 1px solid #334155; }
+    select, textarea, button { font-family: inherit; }
+    select { background: #1e293b; color: #f8fafc; border: 1px solid #334155; padding: 6px 12px; border-radius: 8px; font-size: 14px; }
+    .box { background: #1e293b; border: 1px solid #334155; border-radius: 12px; padding: 20px; margin-bottom: 20px; }
+    .modes { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 16px; }
+    .mbtn { background: #0f172a; color: #e2e8f0; border: 1px solid #334155; padding: 10px 16px; border-radius: 8px; cursor: pointer; font-size: 14px; }
+    .mbtn.active { background: #0284c7; border-color: #0284c7; color: #ffffff; }
+    #fileInput { display: none; margin-bottom: 16px; }
+    textarea { width: 100%; min-height: 100px; background: #0f172a; border: 1px solid #334155; border-radius: 8px; color: #fff; padding: 12px; margin-bottom: 16px; resize: vertical; }
+    .action-btns { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 16px; }
+    .btn { background: #0284c7; color: #fff; border: none; padding: 10px 18px; border-radius: 8px; cursor: pointer; font-weight: bold; }
+    .btn-sec { background: #334155; color: #fff; border: none; padding: 10px 18px; border-radius: 8px; cursor: pointer; }
+    .btn-green { background: #16a34a; color: #fff; border: none; padding: 10px 18px; border-radius: 8px; cursor: pointer; font-weight: bold; }
+    .out { background: #0f172a; border: 1px solid #334155; border-radius: 8px; padding: 12px; min-height: 80px; white-space: pre-wrap; word-break: break-word; }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="top-bar">
+      <div class="badge" id="badgeText">તમારી કલ્પના, AI સાથે</div>
+      <select id="langSelect" onchange="changeLang()">
+        <option value="gu">ગુજરાતી</option>
+        <option value="hi">हिंदी</option>
+        <option value="en">English</option>
+      </select>
+    </div>
+
+    <h1 style="margin: 0 0 8px 0;">VABRA AI STUDIO</h1>
+    <p id="subText" style="color: #94a3b8; margin: 0 0 20px 0;">ફોટો, વીડિયો અને નવી ક્રિએટિવ રચનાઓ માટેનું તમારું AI સ્ટુડિયો.</p>
+
+    <div class="box">
+      <div class="modes">
+        <button class="mbtn active" onclick="setMode('i2i', this)">Image to Image</button>
+        <button class="mbtn" onclick="setMode('i2v', this)">Image to Video</button>
+        <button class="mbtn" onclick="setMode('p2v', this)">Prompt to Video</button>
+        <button class="mbtn" onclick="setMode('w2i', this)">Writing to Image</button>
+      </div>
+
+      <input type="file" id="fileInput" />
+
+      <textarea id="promptInput" placeholder="વિષય અથવા સીન લખો... (દા.ત. રાજસ્થાનની હવેલી પાસે કાળી BMW કાર)"></textarea>
+
+      <div class="action-btns">
+        <button class="btn" onclick="generate('prompt')" id="btnP">પ્રોમ્પ્ટ બનાવો</button>
+        <button class="btn-sec" onclick="generate('story')" id="btnS">વાર્તા બનાવો</button>
+        <button class="btn-sec" onclick="generate('script')" id="btnSc">સ્ક્રિપ્ટ બનાવો</button>
+        <button class="btn-sec" onclick="copyText()" id="btnC">કોપી કરો</button>
+        <button class="btn-green" onclick="downloadText()" id="btnD">ડાઉનલોડ કરો 📥</button>
+      </div>
+
+      <div class="out" id="output">પરિણામ અહીં દેખાશે.</div>
+    </div>
+  </div>
+
+  <script>
+    let currentLang = 'gu';
+    let currentMode = 'i2i';
+
+    function setMode(mode, btn) {
+      currentMode = mode;
+      document.querySelectorAll('.mbtn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      document.getElementById('fileInput').style.display = (mode === 'i2i' || mode === 'i2v') ? 'block' : 'none';
+    }
+
+    function generate(type) {
+      const val = document.getElementById('promptInput').value.trim();
+      const out = document.getElementById('output');
+      if(!val) {
+        out.innerText = currentLang === 'gu' ? 'કૃપા કરીને પહેલા કંઈક લખો.' : (currentLang === 'hi' ? 'कृपया पहले कुछ लिखें।' : 'Please write something first.');
+        return;
+      }
+      
+      let res = '';
+      if(type === 'prompt') {
+        res = `[AI PROMPT - ${currentMode.toUpperCase()}]\nCinematic detail scene of: ${val}. 4k resolution, hyper-realistic, dramatic cinematic lighting, professional studio look.`;
+      } else if(type === 'story') {
+        res = `[STORY]\n${val}\n\nસાંજનો સમય હતો અને વાતાવરણ શાંત હતું. ${val} ના દ્રશ્ય સાથે એક નવી કહાનીની શરૂઆત થઈ. દરેક ક્ષણ કોઈ સિનેમેટિક ફિલ્મ જેવી ભવ્ય લાગી રહી હતી.`;
+      } else if(type === 'script') {
+        res = `[REEL SCRIPT (15 SEC)]\n0-5s: Camera zooms into the location of ${val}.\n5-10s: Close-up shot with smooth cinematic motion.\n10-15s: Voiceover: "ઇતિહાસ અને શાનની નવી શરૂઆત." Fade out.`;
+      }
+      out.innerText = res;
+    }
+
+    function copyText() {
+      const txt = document.getElementById('output').innerText;
+      navigator.clipboard.writeText(txt);
+      alert(currentLang === 'gu' ? 'કોપી થઈ ગયું!' : (currentLang === 'hi' ? 'कॉपी हो गया!' : 'Copied!'));
+    }
+
+    function downloadText() {
+      const txt = document.getElementById('output').innerText;
+      if(!txt || txt === 'પરિણામ અહીં દેખાશે.') return;
+      const blob = new Blob([txt], { type: 'text/plain;charset=utf-8' });
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      a.download = 'vabra-ai-prompt.txt';
+      a.click();
+    }
+
+    function changeLang() {
+      currentLang = document.getElementById('langSelect').value;
+      if(currentLang === 'gu') {
+        document.getElementById('badgeText').innerText = 'તમારી કલ્પના, AI સાથે';
+        document.getElementById('subText').innerText = 'ફોટો, વીડિયો અને નવી ક્રિએટિવ રચનાઓ માટેનું તમારું AI સ્ટુડિયો.';
+        document.getElementById('btnP').innerText = 'પ્રોમ્પ્ટ બનાવો';
+        document.getElementById('btnS').innerText = 'વાર્તા બનાવો';
+        document.getElementById('btnSc').innerText = 'સ્ક્રિપ્ટ બનાવો';
+        document.getElementById('btnC').innerText = 'કોપી કરો';
+        document.getElementById('btnD').innerText = 'ડાઉનલોડ કરો 📥';
+      } else if(currentLang === 'hi') {
+        document.getElementById('badgeText').innerText = 'आपकी कल्पना, AI के साथ';
+        document.getElementById('subText').innerText = 'फोटो, वीडियो और नई रचनात्मक कृतियों के लिए आपका AI स्टूडियो।';
+        document.getElementById('btnP').innerText = 'प्रॉम्प्ट बनाएं';
+        document.getElementById('btnS').innerText = 'कहानी बनाएं';
+        document.getElementById('btnSc').innerText = 'स्क्रिप्ट बनाएं';
+        document.getElementById('btnC').innerText = 'कॉपी करें';
+        document.getElementById('btnD').innerText = 'डाउनलोड करें 📥';
+      } else {
+        document.getElementById('badgeText').innerText = 'Your imagination, with AI';
+        document.getElementById('subText').innerText = 'Your AI studio for photos, videos, and creative works.';
+        document.getElementById('btnP').innerText = 'Generate Prompt';
+        document.getElementById('btnS').innerText = 'Generate Story';
+        document.getElementById('btnSc').innerText = 'Generate Script';
+        document.getElementById('btnC').innerText = 'Copy';
+        document.getElementById('btnD').innerText = 'Download 📥';
+      }
+    }
+  </script>
+</body>
 </html>
+
