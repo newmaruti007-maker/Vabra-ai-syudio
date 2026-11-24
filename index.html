@@ -1,3 +1,446 @@
+<!DOCTYPE html>
+<html lang="gu">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>VABRA AI STUDIO</title>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+    body {
+      margin: 0;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      background: #0f172a;
+      color: #e2e8f0;
+      padding: 16px;
+    }
+    .wrap {
+      max-width: 860px;
+      margin: 0 auto;
+    }
+    .top-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-bottom: 14px;
+    }
+    .badge {
+      background: #1e293b;
+      color: #38bdf8;
+      padding: 6px 12px;
+      border-radius: 999px;
+      font-size: 13px;
+      border: 1px solid #334155;
+    }
+    select, textarea, button, input[type="file"] {
+      font-family: inherit;
+    }
+    select {
+      background: #1e293b;
+      color: #f8fafc;
+      border: 1px solid #334155;
+      border-radius: 10px;
+      padding: 8px 12px;
+      font-size: 14px;
+    }
+    h1 {
+      margin: 6px 0 8px;
+      font-size: 28px;
+      color: #ffffff;
+    }
+    .intro {
+      margin: 0 0 18px;
+      color: #94a3b8;
+      line-height: 1.5;
+    }
+    .box {
+      background: #1e293b;
+      border: 1px solid #334155;
+      border-radius: 14px;
+      padding: 16px;
+      margin-bottom: 18px;
+    }
+    .modes {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 14px;
+    }
+    .mode-btn {
+      background: #0f172a;
+      color: #e2e8f0;
+      border: 1px solid #334155;
+      border-radius: 10px;
+      padding: 9px 14px;
+      cursor: pointer;
+      font-size: 14px;
+    }
+    .mode-btn.active {
+      background: #0284c7;
+      border-color: #0284c7;
+      color: #ffffff;
+      font-weight: 600;
+    }
+    .file-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-bottom: 12px;
+    }
+    .file-name {
+      color: #94a3b8;
+      font-size: 13px;
+    }
+    #previewImg {
+      display: none;
+      max-width: 240px;
+      max-height: 240px;
+      border-radius: 10px;
+      margin-bottom: 12px;
+      border: 1px solid #334155;
+    }
+    textarea {
+      width: 100%;
+      min-height: 100px;
+      background: #0f172a;
+      color: #f8fafc;
+      border: 1px solid #334155;
+      border-radius: 10px;
+      padding: 12px;
+      font-size: 15px;
+      resize: vertical;
+      margin-bottom: 12px;
+    }
+    .actions {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-bottom: 12px;
+    }
+    .primary-btn {
+      background: #0284c7;
+      color: #ffffff;
+      border: none;
+      border-radius: 10px;
+      padding: 10px 16px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+    .secondary-btn {
+      background: #0f172a;
+      color: #e2e8f0;
+      border: 1px solid #334155;
+      border-radius: 10px;
+      padding: 10px 14px;
+      font-size: 14px;
+      cursor: pointer;
+    }
+    .status {
+      color: #38bdf8;
+      font-size: 13px;
+      min-height: 18px;
+      margin-bottom: 8px;
+    }
+    pre {
+      white-space: pre-wrap;
+      word-wrap: break-word;
+      background: #0f172a;
+      border: 1px solid #334155;
+      border-radius: 10px;
+      padding: 14px;
+      margin: 0;
+      color: #f1f5f9;
+      line-height: 1.55;
+      font-size: 14px;
+    }
+    h2 {
+      font-size: 20px;
+      margin: 20px 0 12px;
+      color: #ffffff;
+    }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 12px;
+    }
+    .card {
+      background: #1e293b;
+      border: 1px solid #334155;
+      border-radius: 12px;
+      padding: 14px;
+    }
+    .card h3 {
+      margin: 8px 0 4px;
+      font-size: 16px;
+      color: #ffffff;
+    }
+    .card p {
+      margin: 0;
+      font-size: 13px;
+      color: #94a3b8;
+    }
+    footer {
+      margin-top: 24px;
+      text-align: center;
+      color: #64748b;
+      font-size: 13px;
+      padding-bottom: 16px;
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="top-bar">
+      <span class="badge" id="badge">તમારી કલ્પના, AI સાથે</span>
+      <select id="lang" aria-label="Language">
+        <option value="gu">ગુજરાતી</option>
+        <option value="hi">हिन्दी</option>
+        <option value="en">English</option>
+      </select>
+    </div>
+
+    <h1>VABRA AI STUDIO</h1>
+    <p class="intro" id="intro">ફોટો, વીડિયો અને નવી ક્રિએટિવ રચનાઓ માટેનું તમારું AI સ્ટુડિયો.</p>
+
+    <div class="box">
+      <div class="modes">
+        <button type="button" class="mode-btn active" data-mode="img2img">Image to Image</button>
+        <button type="button" class="mode-btn" data-mode="img2vid">Image to Video</button>
+        <button type="button" class="mode-btn" data-mode="prompt2vid">Prompt to Video</button>
+        <button type="button" class="mode-btn" data-mode="write2img">Writing to Image</button>
+      </div>
+
+      <div class="file-row">
+        <input type="file" id="fileInput" accept="image/*" />
+        <span class="file-name" id="fileLabel">કોઈ ફાઈલ પસંદ કરેલી નથી</span>
+      </div>
+
+      <img id="previewImg" alt="Preview" />
+
+      <textarea id="promptInput" placeholder="વિષય અથવા સીન લખો..."></textarea>
+
+      <div class="actions">
+        <button type="button" class="primary-btn" id="btnPrompt">પ્રોમ્પ્ટ બનાવો</button>
+        <button type="button" class="secondary-btn" id="btnStory">વાર્તા બનાવો</button>
+        <button type="button" class="secondary-btn" id="btnScript">સ્ક્રિપ્ટ બનાવો</button>
+        <button type="button" class="secondary-btn" id="btnCopy">કોપી કરો</button>
+      </div>
+
+      <div class="status" id="statusText"></div>
+      <pre id="resultBox">પરિણામ અહીં દેખાશે.</pre>
+    </div>
+
+    <h2 id="toolsTitle">તમારા AI ટૂલ્સ</h2>
+    <div class="grid" id="toolsGrid"></div>
+
+    <footer>© 2026 VABRA AI STUDIO</footer>
+  </div>
+
+  <script>
+    const D = {
+      gu: {
+        badge: "તમારી કલ્પના, AI સાથે",
+        intro: "ફોટો, વીડિયો અને નવી ક્રિએટિવ રચનાઓ માટેનું તમારું AI સ્ટુડિયો.",
+        noFile: "કોઈ ફાઈલ પસંદ કરેલી નથી",
+        placeholder: "વિષય અથવા સીન લખો... (દા.ત. રાજસ્થાનની હવેલી પાસે કાળી BMW કાર)",
+        btnPrompt: "પ્રોમ્પ્ટ બનાવો",
+        btnStory: "વાર્તા બનાવો",
+        btnScript: "સ્ક્રિપ્ટ બનાવો",
+        btnCopy: "કોપી કરો",
+        copied: "પરિણામ કોપી થઈ ગયું છે.",
+        empty: "પહેલાં વિષય અથવા સીન લખો.",
+        result: "પરિણામ અહીં દેખાશે.",
+        toolsTitle: "તમારા AI ટૂલ્સ",
+        tools: [
+          ["📖", "AI વાર્તા", "વાર્તા અને કથાવસ્તુ બનાવો."],
+          ["✍️", "AI સ્ક્રિપ્ટ", "ડાયલોગ અને સીન લખાવો."],
+          ["📸", "AI ફોટો", "ઇમેજ પ્રોમ્પ્ટ અને આઈડિયા બનાવો."],
+          ["🎬", "AI વીડિયો", "વીડિયો સીન અને મોશન પ્રોમ્પ્ટ બનાવો."]
+        ],
+        makePrompt: (mode, file, text) =>
+`Mode: ${mode}
+Image: ${file || "None"}
+Scene: ${text}
+
+Ready Prompt:
+Cinematic ${mode} composition featuring ${text}${file ? `, based on reference image ${file}` : ""}. Rich natural lighting, crisp details, balanced framing, high visual clarity, 4k look.`
+      },
+      hi: {
+        badge: "आपकी कल्पना, AI के साथ",
+        intro: "फोटो, वीडियो और रचनात्मक विचारों के लिए आपका AI स्टूडियो।",
+        noFile: "कोई फ़ाइल चुनी नहीं गई है",
+        placeholder: "विषय या सीन लिखें... (जैसे राजस्थानी हवेली के पास काली BMW कार)",
+        btnPrompt: "प्रॉम्प्ट बनाएं",
+        btnStory: "कहानी बनाएं",
+        btnScript: "स्क्रिप्ट बनाएं",
+        btnCopy: "कॉपी करें",
+        copied: "परिणाम कॉपी हो गया है।",
+        empty: "पहले विषय या सीन लिखें।",
+        result: "परिणाम यहाँ दिखेगा।",
+        toolsTitle: "आपके AI टूल",
+        tools: [
+          ["📖", "AI कहानी", "कहानी और प्लॉट तैयार करें।"],
+          ["✍️", "AI स्क्रिप्ट", "संवाद और दृश्य लिखें।"],
+          ["📸", "AI फोटो", "इमेज प्रॉम्प्ट और विचार बनाएं।"],
+          ["🎬", "AI वीडियो", "वीडियो सीन और मोशन प्रॉम्प्ट बनाएं।"]
+        ],
+        makePrompt: (mode, file, text) =>
+`Mode: ${mode}
+Image: ${file || "None"}
+Scene: ${text}
+
+Ready Prompt:
+Cinematic ${mode} scene depicting ${text}${file ? `, matching reference ${file}` : ""}. Dramatic lighting, detailed textures, clean composition, 4k cinematic quality.`
+      },
+      en: {
+        badge: "Your imagination, powered by AI",
+        intro: "Your creative studio for AI photos, videos and fresh ideas.",
+        noFile: "No file selected",
+        placeholder: "Write a topic or scene... (e.g. black BMW near a heritage haveli)",
+        btnPrompt: "Generate Prompt",
+        btnStory: "Generate Story",
+        btnScript: "Generate Script",
+        btnCopy: "Copy",
+        copied: "Copied to clipboard.",
+        empty: "Please enter a topic or scene first.",
+        result: "Your result will appear here.",
+        toolsTitle: "Your AI Tools",
+        tools: [
+          ["📖", "AI Story", "Create stories and plots."],
+          ["✍️", "AI Script", "Write scenes and dialogue."],
+          ["📸", "AI Photo", "Build detailed image prompts."],
+          ["🎬", "AI Video", "Build video and motion prompts."]
+        ],
+        makePrompt: (mode, file, text) =>
+`Mode: ${mode}
+Image: ${file || "None"}
+Scene: ${text}
+
+Ready Prompt:
+Cinematic ${mode} shot showing ${text}${file ? `, using reference ${file}` : ""}. Natural lighting, sharp detail, cohesive atmosphere, 4k resolution.`
+      }
+    };
+
+    let currentLang = "gu";
+    let currentMode = "img2img";
+    let selectedFileName = "";
+
+    const langSelect = document.getElementById("lang");
+    const fileInput = document.getElementById("fileInput");
+    const fileLabel = document.getElementById("fileLabel");
+    const previewImg = document.getElementById("previewImg");
+    const promptInput = document.getElementById("promptInput");
+    const resultBox = document.getElementById("resultBox");
+    const statusText = document.getElementById("statusText");
+
+    function applyUI() {
+      const d = D[currentLang];
+      document.documentElement.lang = currentLang;
+      document.getElementById("badge").textContent = d.badge;
+      document.getElementById("intro").textContent = d.intro;
+      fileLabel.textContent = selectedFileName || d.noFile;
+      promptInput.placeholder = d.placeholder;
+      document.getElementById("btnPrompt").textContent = d.btnPrompt;
+      document.getElementById("btnStory").textContent = d.btnStory;
+      document.getElementById("btnScript").textContent = d.btnScript;
+      document.getElementById("btnCopy").textContent = d.btnCopy;
+      document.getElementById("toolsTitle").textContent = d.toolsTitle;
+      if (!resultBox.dataset.hasOutput) {
+        resultBox.textContent = d.result;
+      }
+      document.getElementById("toolsGrid").innerHTML = d.tools
+        .map(t => `<article class="card"><div style="font-size:26px">${t[0]}</div><h3>${t[1]}</h3><p>${t[2]}</p></article>`)
+        .join("");
+    }
+
+    document.querySelectorAll(".mode-btn").forEach(btn => {
+      btn.addEventListener("click", () => {
+        document.querySelectorAll(".mode-btn").forEach(b => b.classList.remove("active"));
+        btn.classList.add("active");
+        currentMode = btn.dataset.mode;
+      });
+    });
+
+    fileInput.addEventListener("change", () => {
+      const file = fileInput.files && fileInput.files[0];
+      if (!file) {
+        selectedFileName = "";
+        previewImg.style.display = "none";
+        applyUI();
+        return;
+      }
+      selectedFileName = file.name;
+      fileLabel.textContent = selectedFileName;
+      const reader = new FileReader();
+      reader.onload = e => {
+        previewImg.src = e.target.result;
+        previewImg.style.display = "block";
+      };
+      reader.readAsDataURL(file);
+    });
+
+    function buildOutput(kind) {
+      const d = D[currentLang];
+      const text = promptInput.value.trim();
+      statusText.textContent = "";
+      if (!text) {
+        statusText.textContent = d.empty;
+        return;
+      }
+
+      let output = "";
+      if (kind === "prompt") {
+        output = d.makePrompt(currentMode, selectedFileName, text);
+      } else if (kind === "story") {
+        output = currentLang === "hi"
+          ? `शीर्षक: ${text}\n\nशुरुआत: एक शांत शाम में "${text}" से जुड़ी घटना की शुरुआत होती है।\nमध्य: आगे बढ़ते हुए नए मोड़ और अनदेखे पल सामने आते हैं।\nअंत: अंत में एक यादगार सीख और स्पष्ट निष्कर्ष मिलता है।`
+          : currentLang === "en"
+          ? `Title: ${text}\n\nBeginning: The idea of "${text}" opens in a quiet moment.\nMiddle: Unexpected turns build tension and character.\nEnding: A clear resolution brings the story together.`
+          : `શીર્ષક: ${text}\n\nશરૂઆત: એક શાંત વાતાવરણમાં "${text}" સાથે જોડાયેલી ઘટના શરૂ થાય છે.\nમધ્ય: આગળ વધતાં નવા વળાંક અને રસપ્રદ પળો આવે છે.\nઅંત: અંતે એક સ્પષ્ટ અને યાદગાર અંત મળે છે.`;
+      } else if (kind === "script") {
+        output = currentLang === "hi"
+          ? `दृश्य 1 - स्थान: मुख्य लोकेशन (${text})\nपात्र 1: क्या तुमने यह दृश्य देखा?\nपात्र 2: हाँ, यह बिल्कुल अलग और खास लग रहा है।`
+          : currentLang === "en"
+          ? `SCENE 1 - LOCATION: ${text}\nCHARACTER A: Did you see that moment?\nCHARACTER B: Yes, it changes everything.`
+          : `દ્રશ્ય 1 - સ્થળ: ${text}\nપાત્ર 1: શું તમે આ દ્રશ્ય જોયું?\nપાત્ર 2: હા, આ ખરેખર અલગ અને ખાસ લાગે છે.`;
+      }
+
+      resultBox.dataset.hasOutput = "1";
+      resultBox.textContent = output;
+    }
+
+    document.getElementById("btnPrompt").addEventListener("click", () => buildOutput("prompt"));
+    document.getElementById("btnStory").addEventListener("click", () => buildOutput("story"));
+    document.getElementById("btnScript").addEventListener("click", () => buildOutput("script"));
+
+    document.getElementById("btnCopy").addEventListener("click", async () => {
+      const d = D[currentLang];
+      if (!resultBox.dataset.hasOutput) return;
+      try {
+        await navigator.clipboard.writeText(resultBox.textContent);
+        statusText.textContent = d.copied;
+      } catch (_) {
+        statusText.textContent = d.copied;
+      }
+    });
+
+    langSelect.addEventListener("change", e => {
+      currentLang = e.target.value;
+      applyUI();
+    });
+
+    applyUI();
+  </script>
+</body>
+</html>
+
+
+
 
 <!DOCTYPE html>
 <html lang="gu">
