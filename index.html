@@ -1,1 +1,124 @@
 
+<!DOCTYPE html>
+<html lang="gu">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>VABRA AI STUDIO</title>
+  <style>
+    body { margin: 0; font-family: system-ui, sans-serif; background: #0f172a; color: #f8fafc; }
+    .wrap { max-width: 860px; margin: 0 auto; padding: 20px 16px 40px; }
+    .top { display: flex; justify-content: space-between; align-items: center; gap: 10px; }
+    .badge { background: #1e293b; color: #38bdf8; padding: 6px 12px; border-radius: 999px; font-size: 13px; }
+    select, textarea, button, input { font: inherit; }
+    select { background: #1e293b; color: #fff; border: 1px solid #334155; border-radius: 8px; padding: 8px; }
+    .box { background: #1e293b; border: 1px solid #334155; border-radius: 12px; padding: 16px; margin-top: 16px; }
+    .modes { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 12px; }
+    .mbtn { background: #0f172a; color: #e2e8f0; border: 1px solid #475569; border-radius: 8px; padding: 8px 12px; cursor: pointer; }
+    .mbtn.on { background: #0284c7; border-color: #0284c7; color: #fff; }
+    #imgBox { display: none; margin-top: 10px; }
+    #prev { display: none; max-width: 200px; margin-top: 8px; border-radius: 8px; }
+    textarea { width: 100%; min-height: 90px; background: #0f172a; color: #fff; border: 1px solid #475569; border-radius: 8px; padding: 10px; margin-top: 10px; box-sizing: border-box; }
+    button.go { background: #0284c7; color: #fff; border: none; border-radius: 8px; padding: 10px 16px; margin-top: 10px; cursor: pointer; }
+    #out { white-space: pre-wrap; background: #0f172a; border: 1px solid #334155; border-radius: 8px; padding: 12px; margin-top: 12px; }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="top">
+      <span id="badge" class="badge"></span>
+      <select id="lang">
+        <option value="gu">ગુજરાતી</option>
+        <option value="hi">हिन्दी</option>
+        <option value="en">English</option>
+      </select>
+    </div>
+
+    <h1>VABRA AI STUDIO</h1>
+    <p id="sub"></p>
+
+    <div class="box">
+      <div class="modes">
+        <button type="button" class="mbtn on" data-m="img2img" onclick="pick('img2img')">Image to Image</button>
+        <button type="button" class="mbtn" data-m="img2vid" onclick="pick('img2vid')">Image to Video</button>
+        <button type="button" class="mbtn" data-m="prompt2vid" onclick="pick('prompt2vid')">Prompt to Video</button>
+        <button type="button" class="mbtn" data-m="write2img" onclick="pick('write2img')">Writing to Image</button>
+      </div>
+
+      <div id="imgBox">
+        <input id="file" type="file" accept="image/*" />
+        <img id="prev" alt="Preview" />
+      </div>
+
+      <textarea id="txt"></textarea>
+      <button id="btn" class="go" type="button" onclick="run()"></button>
+      <div id="out"></div>
+    </div>
+  </div>
+
+  <script>
+    const T = {
+      gu: {
+        badge: "તમારી કલ્પના, AI સાથે",
+        sub: "Image to Image, Image to Video, Prompt to Video અને Writing to Image માટે સ્ટુડિયો.",
+        ph: "વિષય અથવા સીન લખો...",
+        btn: "પ્રોમ્પ્ટ બનાવો",
+        empty: "પહેલાં કંઈક લખો.",
+        init: "પરિણામ અહીં દેખાશે."
+      },
+      hi: {
+        badge: "आपकी कल्पना, AI के साथ",
+        sub: "Image to Image, Image to Video, Prompt to Video और Writing to Image स्टूडियो।",
+        ph: "विषय या सीन लिखें...",
+        btn: "प्रॉम्प्ट बनाएं",
+        empty: "पहले कुछ लिखें।",
+        init: "परिणाम यहां दिखेगा।"
+      },
+      en: {
+        badge: "Your imagination, powered by AI",
+        sub: "Studio for Image to Image, Image to Video, Prompt to Video and Writing to Image.",
+        ph: "Write topic or scene...",
+        btn: "Build Prompt",
+        empty: "Write something first.",
+        init: "Result will appear here."
+      }
+    };
+
+    let L = "gu", M = "img2img", fname = "";
+
+    function pick(m) {
+      M = m;
+      document.querySelectorAll(".mbtn").forEach(b => b.classList.toggle("on", b.dataset.m === m));
+      imgBox.style.display = (m === "img2img" || m === "img2vid") ? "block" : "none";
+    }
+
+    file.onchange = e => {
+      const f = e.target.files && e.target.files[0];
+      fname = f ? f.name : "";
+      if (f) { prev.src = URL.createObjectURL(f); prev.style.display = "block"; }
+      else { prev.style.display = "none"; }
+    };
+
+    function draw() {
+      const d = T[L];
+      document.documentElement.lang = L;
+      badge.textContent = d.badge;
+      sub.textContent = d.sub;
+      txt.placeholder = d.ph;
+      btn.textContent = d.btn;
+      out.textContent = d.init;
+    }
+
+    lang.onchange = e => { L = e.target.value; draw(); };
+
+    function run() {
+      const v = txt.value.trim();
+      if (!v) { out.textContent = T[L].empty; return; }
+      out.textContent = `Mode: ${M}${fname ? "\nImage: " + fname : ""}\nPrompt: ${v}`;
+    }
+
+    draw();
+    pick(M);
+  </script>
+</body>
+</html>
