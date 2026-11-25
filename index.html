@@ -181,7 +181,12 @@ $('realGenerate').addEventListener('click',async()=>{
   else {setStatus(data.message||'Backend તરફથી જવાબ મળ્યો, પણ videoUrl મળ્યો નથી.')}
  }catch(err){setStatus('વાસ્તવિક જનરેશન શરૂ ન થયું: '+err.message+'. Netlify backend function અને provider API સેટ કરો.')}
  finally{$('realGenerate').disabled=false}
-});
+});name = "vabr-ai-studio"
+compatibility_date = "2026-11-25"
+
+[assets]
+directory = "./"
+
 </script>
 </body>
 </html>
