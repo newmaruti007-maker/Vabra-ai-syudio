@@ -180,13 +180,31 @@ $('realGenerate').addEventListener('click',async()=>{
   else if(data.status==='processing'){setStatus(data.message||'જનરેશન ચાલુ છે. Backend status/polling જોડવાની જરૂર પડી શકે છે.')}
   else {setStatus(data.message||'Backend તરફથી જવાબ મળ્યો, પણ videoUrl મળ્યો નથી.')}
  }catch(err){setStatus('વાસ્તવિક જનરેશન શરૂ ન થયું: '+err.message+'. Netlify backend function અને provider API સેટ કરો.')}
- finally{$('realGenerate').disabled=false}
-});name = "vabr-ai-studio"
-compatibility_date = "2026-11-25"
+  finally{$('realGenerate').disabled=false}});
+  
+  
 
-[assets]
-directory = "./"
+  
+ </script>
+ </body>
+ </html>
 
-</script>
-</body>
-</html>
+
+
+  
+
+
+
+
+
+ 
+
+
+
+
+
+
+
+
+
+
