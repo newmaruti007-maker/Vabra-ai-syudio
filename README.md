@@ -1,1 +1,1 @@
-vabra-ai-studio-2
+vabra-ai-studio
