@@ -1,1 +1,1 @@
-vabra-ai-stidio
+vabra-ai-studio
