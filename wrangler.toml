@@ -1,4 +1,4 @@
-name = "vabr-ai-studio"
+name = "vabra-ai-studio"
 main = "worker.js"
 compatibility_date = "2026-11-25"
 
